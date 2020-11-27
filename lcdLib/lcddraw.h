@@ -1,10 +1,10 @@
 /** \file lcddraw.h
  *  \brief Adapted from RobG's EduKit
  */
-
 #ifndef lcddraw_included
 #define lcddraw_included
 
+void diamondShape(u_char width, u_char height, u_int colorBGR);
 /** Draw single pixel at col, row 
  *
  *  \param col Column to draw to
@@ -41,15 +41,14 @@ void clearScreen(u_int colorBGR);
  *  \param fgColorBGR Foreground color in BGR
  *  \param bgColorBGR Background color in BGR
  */
-void drawString5x7(u_char col, u_char row, char *string, 
+/*void drawString5x7(u_char col, u_char row, char *string, 
 		   u_int fgColorBGR, u_int bgColorBGR);
 
 /** 5x7 font - this function draws background pixels
  *  Adapted from RobG's EduKit
  */
-void drawChar5x7(u_char col, u_char row, char c, 
-		 u_int fgColorBGR, u_int bgColorBGR);
-
+/*void drawChar5x7(u_char col, u_char row, char c, 
+		 u_int fgColorBGR, u_int bgColorBGR);*/
 void drawString11x16(u_char col, u_char row, char *string,
 		     u_int fgColorBGR, u_int bgColorBGR);
 void drawChar11x16(u_char rcol, u_char rrow, u_char c, 
