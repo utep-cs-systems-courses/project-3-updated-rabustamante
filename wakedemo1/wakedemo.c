@@ -3,28 +3,73 @@
 #include "lcdutils.h"
 #include "lcddraw.h"
 #include "stateMachines.h"
-#include "p2switches.h"
-#define LED_GREEN BIT6             // P1.6
-
+#include "switches.h"
+#include "led.h"
+#include "buzzer.h"
 
 short redrawScreen = 1;
 u_int fontFgColor = COLOR_GREEN;
-u_int color =   COLOR_GREEN;
-u_int color2 = COLOR_BLUE;
 void wdt_c_handler()
+
 {
   static int secCount = 0;
-
   secCount ++;
-  if (secCount == 250) {		/* once/sec */
-    secCount = 0;
-    fontFgColor = (fontFgColor == COLOR_GREEN) ? COLOR_BLACK : COLOR_GREEN;
-    
-    redrawScreen = 1;
+          
+   if (secCount == 250 && switch_state_changed <=4) {/* once/sec */
+     secCount = 0;
+     drawString11x16(20,20, "hello", fontFgColor, COLOR_BLUE);
+     static char state=0;
+      switch(state){
+      case 0:
+	diamondState();
+	state =1;
+	break;
+      case 1:
+	diamondState();
+	state =2;
+	break;
+      case 2:
+	diamondState();
+	state =3;
+	break;
+      case 3:
+	diamondState();
+	state =0;
+      default:
+	state =0;
+	break;
+      }
+      
    
-  }
-}
+   
+   P1OUT |= LED_GREEN;/* green on */
   
+   }
+   // fontFgColor = (fontFgColor == COLOR_GREEN) ? COLOR_BLACK : COLOR_GREEN;
+   redrawScreen = 1;
+
+  if(secCount == 250 && switch_state_changed ==0){
+    switch_state();
+     redrawScreen = 0;
+     secCount ==0;
+      P1OUT &= ~LED_GREEN;
+}
+if(secCount == 250  && switch_state_changed ==1){
+    switch_state();
+    secCount =0;
+     redrawScreen = 0;
+     P1OUT &= ~LED_GREEN;
+}
+
+if(secCount == 125 && switch_state_changed ==2){
+    switch_state();
+    secCount =0;
+     redrawScreen = 0;
+     P1OUT &= ~LED_GREEN;
+}
+
+}
+ 
 
 void main()
 {
@@ -32,38 +77,30 @@ void main()
   P1OUT |= LED_GREEN;
   configureClocks();
   lcd_init();
-  
+  led_init();
+  buzzer_init();
+  switch_init();
   enableWDTInterrupts();      /**< enable periodic interrupt */
   or_sr(0x8);	              /**< GIE (enable interrupts) */
   
   clearScreen(COLOR_BLUE);
-  static char state =0;
-  while (1) {			/* forever */
-    if (redrawScreen) {
+  //static char state =0;
+   while (1) {			/* forever */
+   if (redrawScreen) {
+    
+     }
+   
       redrawScreen = 0;
-      drawString11x16(20,20, "hello", fontFgColor, COLOR_BLUE);
-      switch(state){
-      case 0:
-	diamondShape(100,100,color);
-	switch_interrupt_handler();
-	state++;
-	break;
-      case 1:
-	diamondShape(100,100,color2);
-	state++;
-	break;
-      case 2:
-	diamondShape(100,100,COLOR_VIOLET);
-	state =0;
-	break;
-      }
-  
+     
     }
-    P1OUT &= ~LED_GREEN;	/* green off */
-    or_sr(0x10);		/**< CPU OFF */
-    P1OUT |= LED_GREEN;		/* green on */
-  }
+  
+   P1OUT &= ~LED_GREEN;/* green off */
+   or_sr(0x10);/**< CPU OFF */
+   P1OUT |= LED_GREEN;/* green on */
+   
 }
+
+
 
     
     
