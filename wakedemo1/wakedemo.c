@@ -3,13 +3,14 @@
 #include "lcdutils.h"
 #include "lcddraw.h"
 #include "stateMachines.h"
-
+#include "p2switches.h"
 #define LED_GREEN BIT6             // P1.6
 
 
 short redrawScreen = 1;
 u_int fontFgColor = COLOR_GREEN;
-
+u_int color =   COLOR_GREEN;
+u_int color2 = COLOR_BLUE;
 void wdt_c_handler()
 {
   static int secCount = 0;
@@ -18,6 +19,7 @@ void wdt_c_handler()
   if (secCount == 250) {		/* once/sec */
     secCount = 0;
     fontFgColor = (fontFgColor == COLOR_GREEN) ? COLOR_BLACK : COLOR_GREEN;
+    
     redrawScreen = 1;
    
   }
@@ -35,11 +37,26 @@ void main()
   or_sr(0x8);	              /**< GIE (enable interrupts) */
   
   clearScreen(COLOR_BLUE);
+  static char state =0;
   while (1) {			/* forever */
     if (redrawScreen) {
       redrawScreen = 0;
       drawString11x16(20,20, "hello", fontFgColor, COLOR_BLUE);
-      drawDiamond();
+      switch(state){
+      case 0:
+	diamondShape(100,100,color);
+	switch_interrupt_handler();
+	state++;
+	break;
+      case 1:
+	diamondShape(100,100,color2);
+	state++;
+	break;
+      case 2:
+	diamondShape(100,100,COLOR_VIOLET);
+	state =0;
+	break;
+      }
   
     }
     P1OUT &= ~LED_GREEN;	/* green off */
