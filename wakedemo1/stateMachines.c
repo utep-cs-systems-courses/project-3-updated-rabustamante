@@ -2,10 +2,9 @@
 #include "stateMachines.h"
 #include "led.h"
 #include "buzzer.h"
-#include "switches.h"
+#include "lcdutils.h"
 #include "lcddraw.h"
-#include "lcdtypes.h"
-
+#include "switches.h"
 char toggle_red()/* always toggle! */
 {
   red_on = 1;
@@ -134,23 +133,22 @@ void state_advance(){
 }
 
 
-void buzzer_advance()
+void buzzer_advance(int x)
 
 {
 
   char buzzer_state;
 
-  /* frequency we want*/
-  static int x  = 500; 
+  /* frequency we want*/ 
 
   if(buzzer_state){
-
+    toggle_red();
     x+=225;
 
   }
 
   else{
-
+    toggle_green();
     x -= 400;
 
   }
@@ -158,7 +156,7 @@ void buzzer_advance()
   /* coverts for buzzer set period*/
   short cycle = 2000000/x;
 
-  buzzer_set_period( cycle);
+  buzzer_set_period(cycle);
 
 }
 void go_up()
@@ -200,28 +198,55 @@ void main_state_advance()
 
   }
 }
-void drawDiamond()
+void diamondState()
 {
-  static char diaState =0;
+  
+  static char diaState = 0;
   switch(diaState){
   case 0:
-    diamondShape(50,50,COLOR_BLUE);
-      diaState++;
-      break;
+    diamondShape(100,100,COLOR_BLUE);
+    diamondShape(110,110,COLOR_BLUE);
+    diamondShape(120,120,COLOR_BLUE);
+    switch_interrupt_handler();
+    diaState =1;
+    break;
   case 1:
-    diamondShape(50,50,COLOR_DARK_VIOLE);
-    diaState++;
-    break;
+     diamondShape(100,100,COLOR_DARK_VIOLE);
+     diaState =2;
+     break;
    case 2:
-    diamondShape(50,50,COLOR_FIREBRICK);
-    diaState++;
-    break;
+     diamondShape(100,100,COLOR_BLUE);
+     diamondShape(110,110,COLOR_FIREBRICK);
+     diaState =3;
+     break;
   case 3:
-    diamondShape(50,50,COLOR_CHOCOLATE);
-    diaState =0;;
-    break;
-  default:
+    diamondShape(100,100,COLOR_BLUE);
+    diamondShape(110,110,COLOR_BLUE);
+    diamondShape(120,120,COLOR_CHOCOLATE);
     diaState =0;
     break;
+  default:
+    diaState=0;
+    break;
   }
+}
+void switch_state()
+{
+  char switch_state_changed =0;
+  switch(switch_state_changed){
+  case 0:
+    switch_interrupt_handler();
+    break;
+  case 1:
+    switch_interrupt_handler();
+    break;
+  case 2:
+    switch_interrupt_handler();
+    break;
+  case 3:
+    switch_interrupt_handler();
+    break;
+
+  }
+
 }

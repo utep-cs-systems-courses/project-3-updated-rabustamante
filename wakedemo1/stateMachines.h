@@ -2,14 +2,13 @@
 
 #define stateMachine_included
 
-
-void drawDiamond();
+void diamondState();
 char toggle_green();
 void state_advance();
-
+void switch_state();
 void main_state_advance();
 
-void buzzer_advance();
+void buzzer_advance(int x);
 
 void led_off();
 void led_on();
