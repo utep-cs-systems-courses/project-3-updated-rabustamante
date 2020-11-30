@@ -8,7 +8,7 @@ void state_advance();
 void switch_state();
 void main_state_advance();
 
-void buzzer_advance(int x);
+void buzzer_advance();
 
 void led_off();
 void led_on();

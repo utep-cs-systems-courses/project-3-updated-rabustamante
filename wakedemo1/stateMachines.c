@@ -5,6 +5,7 @@
 #include "lcdutils.h"
 #include "lcddraw.h"
 #include "switches.h"
+static int buzzState;
 char toggle_red()/* always toggle! */
 {
   red_on = 1;
@@ -129,73 +130,56 @@ void dimLights()
   }
 }
 void state_advance(){
-  toggle_red();
 }
-
-
-void buzzer_advance(int x)
+void buzzer_advance()
 
 {
-
-  char buzzer_state;
-
-  /* frequency we want*/ 
-
-  if(buzzer_state){
-    toggle_red();
-    x+=225;
-
+ static  int x  =500;
+  if(buzzState){
+    x +=225;
+    
   }
-
   else{
-    toggle_green();
-    x -= 400;
-
+    x -=450;
   }
-
-  /* coverts for buzzer set period*/
   short cycle = 2000000/x;
-
   buzzer_set_period(cycle);
-
 }
+
 void go_up()
 
 {
-
-  int sb = 1;
-
-  toggle_green();
-
+  buzzState =1;
+  red_on = 1;
+  led_changed = red_on;
+  led_update();
+ 
 }
 
 void go_down()
 
 {
-
-  int sb = 0;
-  toggle_red();
+  buzzState = 0;
+  red_on = 0;
+  led_changed = green_on;
+  led_update();
+  
 }
 
 void main_state_advance()
 
 {
-  
-  static char  state =0;
-  switch(state){
+ 
+  switch(buzzState){
   case 0:
+    go_down();
+    buzzer_advance();
+    buzzState =1;
   case 1:
     go_up();
-    state++;
-    break;
+    buzzer_advance();
+    buzzState = 0;
     
-  case 2:
-    go_down();
-    state =0;
-
-  default:
-    break;
-
   }
 }
 void diamondState()
