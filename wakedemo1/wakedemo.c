@@ -33,12 +33,17 @@ if(secCount == 250  && switch_state_changed ==1){
     
 }
 
-if(secCount == 125 && switch_state_changed ==2){
+if(secCount !=250 && switch_state_changed ==2){
     switch_state();
     secCount =0;
      redrawScreen = 0;
     
 }
+ if(secCount != 250 && switch_state_changed ==3){
+    switch_state();
+    secCount =0;
+    redrawScreen = 0;
+ }
 
 }
  
