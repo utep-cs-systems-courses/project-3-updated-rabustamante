@@ -96,7 +96,7 @@ void drawString11x16(u_char col, u_char row, char *string,
 /** 5x7 font - this function draws background pixels
  *  Adapted from RobG's EduKit
  */
-/*void drawChar5x7(u_char rcol, u_char rrow, char c,
+void drawChar5x7(u_char rcol, u_char rrow, char c,
 		 u_int fgColorBGR, u_int bgColorBGR)
 {
   u_char col = 0;
@@ -106,7 +106,7 @@ void drawString11x16(u_char col, u_char row, char *string,
   
   lcd_setArea(rcol, rrow, rcol + 4, rrow + 7); 
 /* relative to requested col/row */
-/* while (row < 8) {
+ while (row < 8) {
     while (col < 5) {
       u_int colorBGR = (font_5x7[oc][col] & bit) ? fgColorBGR : bgColorBGR;
       lcd_writeColor(colorBGR);
@@ -116,7 +116,7 @@ void drawString11x16(u_char col, u_char row, char *string,
     bit <<= 1;
     row++;
   }
- }*/
+ }
 
 /** Draw string at col,row
  *  Type:
@@ -129,11 +129,8 @@ void drawString11x16(u_char col, u_char row, char *string,
  *  \param string The string
  *  \param fgColorBGR Foreground color in BGR
  *  \param bgColorBGR Background color in BGR
- */
-
-
- 
-/* void drawString5x7(u_char col, u_char row, char *string,
+ */ 
+ void drawString5x7(u_char col, u_char row, char *string,
 		    u_int fgColorBGR, u_int bgColorBGR)
  {
    u_char cols = col;
@@ -141,7 +138,7 @@ void drawString11x16(u_char col, u_char row, char *string,
      drawChar5x7(cols, row, *string++, fgColorBGR, bgColorBGR);
      cols += 6;
    }
- }*
+ }
 
 /** Draw rectangle outline
  *  
