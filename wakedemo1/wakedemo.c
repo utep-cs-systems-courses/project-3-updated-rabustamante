@@ -8,49 +8,49 @@
 #include "buzzer.h"
 
 short redrawScreen = 1;
-u_int fontFgColor = COLOR_GREEN;
-void wdt_c_handler()
 
+u_int fontFgColor = COLOR_GREEN;
+
+void wdt_c_handler()
 {
   static int secCount = 0;
   secCount ++;
+
   if( secCount ==  250){
+
     secCount =0;
     fontFgColor = (fontFgColor == COLOR_GREEN) ? COLOR_BLACK : COLOR_GREEN;
     redrawScreen = 1;
   }
-
   if(secCount == 250 && switch_state_changed ==0){
-    switch_state();
-     redrawScreen = 0;
-     secCount ==0;
-     
-}
-if(secCount == 250  && switch_state_changed ==1){
-    switch_state();
-    secCount =0;
-     redrawScreen = 0;
-    
-}
+    switches_state();
+    redrawScreen = 1;
+    secCount ==0;
+  }
 
-if(secCount !=250 && switch_state_changed ==2){
-    switch_state();
+  if(secCount == 250  && switch_state_changed ==1){
+    switches_state();
     secCount =0;
-     redrawScreen = 0;
-    
-}
- if(secCount != 250 && switch_state_changed ==3){
-    switch_state();
+    redrawScreen = 1;
+
+  }
+
+  if(secCount !=250 && switch_state_changed ==2){
+    switches_state();  
     secCount =0;
-    redrawScreen = 0;
- }
+    redrawScreen = 1;
 
+  }
+
+  if(secCount != 250 && switch_state_changed ==3){
+    switches_state();
+    secCount =0;
+    redrawScreen =1;
+  }
 }
- 
-
 void main()
 {
-  P1DIR |= LED_GREEN;		/**< Green led on when CPU on */		
+  P1DIR |= LED_GREEN;/**< Green led on when CPU on */
   P1OUT |= LED_GREEN;
   configureClocks();
   lcd_init();
@@ -58,49 +58,52 @@ void main()
   buzzer_init();
   switch_init();
   enableWDTInterrupts();      /**< enable periodic interrupt */
-  or_sr(0x8);	              /**< GIE (enable interrupts) */
-  
+  or_sr(0x8);              /**< GIE (enable interrupts) */
   clearScreen(COLOR_BLUE);
+
   static char state =0;
-   while (1) {			/* forever */
-   if (redrawScreen) {
+
+  while (1) {/* forever */
+
+    if (redrawScreen) {
       drawString11x16(20,20, "hello", fontFgColor, COLOR_BLUE);
-     
+      
       switch(state){
       case 0:
-	diamondState();
+	switches_state();
+	diamond_State();
 	state =1;
 	break;
+
       case 1:
-	diamondState();
+	diamond_State();
 	state =2;
 	break;
+
       case 2:
-	diamondState();
+	diamond_State();
 	state =3;
 	break;
+
       case 3:
-	diamondState();
+	diamond_State();
 	state =0;
+	break;
       default:
 	state =0;
 	break;
+
       }
-   
       redrawScreen = 0;
-   }
-   
-  
-   P1OUT &= ~LED_GREEN;/* green off */
-   or_sr(0x10);/**< CPU OFF */
-   P1OUT |= LED_GREEN;/* green on */
-   }
+
+    }
+
+    P1OUT &= ~LED_GREEN;/* green off */
+    or_sr(0x10);/**< CPU OFF */
+    P1OUT |= LED_GREEN;/* green on */
+
+  }
 }
-
-
-
-    
-    
 
 
 
