@@ -5,7 +5,9 @@
 #include "lcdutils.h"
 #include "lcddraw.h"
 #include "switches.h"
-static int buzzState;
+
+char dimState = 0;
+char buzzState = 0;
 char toggle_red()/* always toggle! */
 {
   red_on = 1;
@@ -16,7 +18,8 @@ char toggle_red()/* always toggle! */
 
 }
 
-char toggle_green(){
+char toggle_green()
+{
   green_on = 1;
   led_changed = green_on;
 
@@ -45,24 +48,26 @@ char toggle_red_green(){
   }
 
 }
-
-static char dimState =0;
 void  onLight75()
 
 {
   switch(dimState){
-    case 0:
-      toggle_red();
-      
-    case 1:
-    case 2:
-    case 3:
-      red_on =0;
-      
-    default:
+  case 0:
+      red_on =1;
+      dimState =1;
+  case 1:
+      red_on =1;
+      dimState =2;
+  case 2:
+      red_on =1;
+     dimState =3;
+  case 3:
+     red_on =1;
+     dimState =0;
+  default:
       dimState =0;
       
-    }
+  }
     led_update();
 }
 void  onLight50()
@@ -71,14 +76,17 @@ void  onLight50()
   switch(dimState){
 
     case 0:
-      
+      red_on =1;
+      dimState =1;
     case 1:
-      toggle_red();     
+      red_on = 1;
+      dimState =2;
     case 2:
+      red_on =0;
+      dimState =3;
     case 3:
-      toggle_red();
-      
-     
+      red_on =0;
+      dimState =0;
     default:
       dimState =0;
       
@@ -88,53 +96,56 @@ void  onLight50()
 
 void  onLight25()
 {
-  dimState =0;
   switch(dimState){
 
     case 0:
-      toggle_red();
+      red_on =0;
+      dimState =1;
      
     case 1:
+      red_on =0;
+      dimState =2;
     case 2:
+      red_on = 0;
+      dimState =3;
     case 3:
       red_on =0;
+      dimState =0;
     default:
     dimState =0;
       
     }
     led_update();
 }
-
+static char dim_state =0;
 void dimLights()
 {
   
   switch(dimState){
   case 0:
-    toggle_red();
-    dimState =1;
+    red_on =1;
+    dim_state=1;
   case 1:
     onLight25();
-    dimState =2;
+    dim_state = 2;
   case 2:
     onLight50();
-    dimState =3;
+    dim_state = 3;
    case 3:
     onLight75();
-    dimState = 4;
+    dim_state = 4;
   
   case 4:
     red_on =0;
-    dimState=0;
+    dim_state = 0;
   default:
-    dimState =0;
+    dim_state =0 ;
   }
-}
-void state_advance(){
 }
 void buzzer_advance()
 
 {
- static  int x  =500;
+ static  int x  =1500;
   if(buzzState){
     x +=225;
     
@@ -151,7 +162,6 @@ void go_up()
 {
   buzzState =1;
   red_on = 1;
-  led_changed = red_on;
   led_update();
  
 }
@@ -160,77 +170,52 @@ void go_down()
 
 {
   buzzState = 0;
-  red_on = 0;
-  led_changed = green_on;
+  red_on= 0;
   led_update();
   
 }
 
 void main_state_advance()
-
-{
- 
+{ 
   switch(buzzState){
   case 0:
-    go_down();
+    go_up();
     buzzer_advance();
     buzzState =1;
   case 1:
-    go_up();
+    go_down();
     buzzer_advance();
     buzzState = 0;
-    
   }
 }
-void diamondState()
+
+void switches_state()
 {
   
-  static char diaState = 0;
-  switch(diaState){
-  case 0:
-    diamondShape(100,100,COLOR_BLUE);
-    diamondShape(110,110,COLOR_BLUE);
-    diamondShape(120,120,COLOR_BLUE);
-    switch_interrupt_handler();
-    diaState =1;
-    break;
-  case 1:
-     diamondShape(100,100,COLOR_DARK_VIOLE);
-     diaState =2;
-     break;
-   case 2:
-     diamondShape(100,100,COLOR_BLUE);
-     diamondShape(110,110,COLOR_FIREBRICK);
-     diaState =3;
-     break;
-  case 3:
-    diamondShape(100,100,COLOR_BLUE);
-    diamondShape(110,110,COLOR_BLUE);
-    diamondShape(120,120,COLOR_CHOCOLATE);
-    diaState =0;
-    break;
-  default:
-    diaState=0;
-    break;
-  }
-}
-void switch_state()
-{
-  char switch_state_changed =0;
   switch(switch_state_changed){
   case 0:
     switch_interrupt_handler();
+    buzzState++;
     break;
+
   case 1:
+
     switch_interrupt_handler();
+    buzzState++;
     break;
+
   case 2:
+    
     switch_interrupt_handler();
+    buzzState++;
     break;
+
   case 3:
+    
     switch_interrupt_handler();
+    buzzState = 0;
     break;
-
+  default:
+    buzzState = 0;
   }
-
-}
+} 
