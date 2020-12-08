@@ -69,7 +69,7 @@ switch_interrupt_handler()
 
   }
   if(switch_state_down4){
-     dimLights();
+    dimLights();
     switch_state_changed = 3;
    
   }
