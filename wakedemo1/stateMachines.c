@@ -6,8 +6,9 @@
 #include "lcddraw.h"
 #include "switches.h"
 
-char dimState = 0;
-char buzzState = 0;
+char dimState = 0; /* dim state var*/
+
+char buzzState = 0; /* buzzer state var*/
 char toggle_red()/* always toggle! */
 {
   red_on = 1;
@@ -48,6 +49,7 @@ char toggle_red_green(){
   }
 
 }
+/*dim light 75%*/
 void  onLight75()
 
 {
@@ -70,6 +72,7 @@ void  onLight75()
   }
     led_update();
 }
+/* dim light 50%*/
 void  onLight50()
 {
   
@@ -93,7 +96,7 @@ void  onLight50()
     }
     led_update();
 }
-
+/*dimligh 25%*/
 void  onLight25()
 {
   switch(dimState){
@@ -117,7 +120,7 @@ void  onLight25()
     }
     led_update();
 }
-static char dim_state =0;
+static char dim_state =0;/*keep track of dim state machince */
 void dimLights()
 {
   
@@ -188,7 +191,7 @@ void main_state_advance()
     buzzState = 0;
   }
 }
-
+/*switch state*/
 void switches_state()
 {
   
