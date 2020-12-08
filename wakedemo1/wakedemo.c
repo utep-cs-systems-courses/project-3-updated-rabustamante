@@ -23,27 +23,27 @@ void wdt_c_handler()
     redrawScreen = 1;
   }
   if(secCount == 250 && switch_state_changed ==0){
-    switches_state();
+    
     redrawScreen = 1;
     secCount ==0;
   }
 
   if(secCount == 250  && switch_state_changed ==1){
-    switches_state();
+    
     secCount =0;
     redrawScreen = 1;
 
   }
 
   if(secCount !=250 && switch_state_changed ==2){
-    switches_state();  
+      
     secCount =0;
     redrawScreen = 1;
 
   }
 
   if(secCount != 250 && switch_state_changed ==3){
-    switches_state();
+    
     secCount =0;
     redrawScreen =1;
   }
@@ -70,23 +70,26 @@ void main()
       
       switch(state){
       case 0:
-	switches_state();
+       
 	diamond_State();
 	state =1;
 	break;
 
       case 1:
 	diamond_State();
+	switches_state();
 	state =2;
 	break;
 
       case 2:
 	diamond_State();
+	switches_state();
 	state =3;
 	break;
 
       case 3:
 	diamond_State();
+	switches_state();
 	state =0;
 	break;
       default:
