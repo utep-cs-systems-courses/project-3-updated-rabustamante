@@ -2,7 +2,7 @@
 	.p2align 1,0
 
 	.text
-	.extern diamondShape
+	.extern diamondShape 
 	
 	.data
 	
@@ -12,10 +12,10 @@ diaState:
 	
 jt:
 	.word case0 	; jt[0]
-	.word case1
-	.word case2
-	.word case3
-	.word default
+	.word case1	; jt[1]
+	.word case2	; jt[2]
+	.word case3	; jt[3]
+	.word default	; jt[4]
 	
 	.global diamond_State
 	
@@ -30,24 +30,24 @@ case0:
 	mov #100, r12
 	mov #100, r13
 	mov #0xf800,r14
-	call #diamondShape
+	call #diamondShape 	;diamondShape(100,100, color blue)
 	mov #110, r12
 	mov #110, r13
 	mov #0xf800, r14
-	call #diamondShape
+	call #diamondShape 	;diamondShape(110,110, color blue)
 	mov #120, r12
 	mov #120, r13
 	mov #0xf800, r14
-	call #diamondShape
-	add #1, diaState
+	call #diamondShape 	;diamondShape(120,120, color blue)
+	add #1, &diaState 	; diastate++
 	jmp end
 case1:
 	mov #100, r12
 	mov #100, r13
 	mov #0xd012, r14
-	call #diamondShape
-	add #1, diaState
-	jmp end
+	call #diamondShape 	;diamondShape(100,100 0xd012)
+	add #1, &diaState
+	jmp end			;pop r0
 case2:
 	mov #100, r12
 	mov #100, r13
@@ -56,9 +56,9 @@ case2:
 	mov #110, r12
 	mov #110 , r13
 	mov #0x2116, r14
-	call #diamondShape
-	add #1, diaState
-	jmp end
+	call #diamondShape 	;diamondShape(110, 110, 0x2116)
+	add #1, &diaState	;diaState++
+	jmp end			;pop r0
 case3:
 	mov #100, r12
 	mov #100, r13
@@ -75,8 +75,8 @@ case3:
 	mov #0,  &diaState
 	jmp end
 default:
-	mov #0, &diaState
+	mov #0, &diaState	;diaState =0
 	jmp end
 end:
-	pop r0
+	pop r0 		
 	
